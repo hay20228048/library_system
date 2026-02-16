@@ -73,7 +73,7 @@ class BookService:
         if not book:
             raise NotFoundError(f"Book with ID {book_id} does not exist.")
 
-        # Check if book is already borrowed
+        #Check if book is already borrowed
         if book["is_borrowed"]:
             raise BorrowError(f"Book '{book['title']}' is already borrowed.")
 

@@ -2,7 +2,6 @@
 
 #Main responsibilities:
     # Create SQLAlchemy engine
-    # Create session
     # Load environment variables
     # Provide Base metadata
 

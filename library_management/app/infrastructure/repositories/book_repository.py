@@ -20,8 +20,6 @@ from datetime import datetime
 import logging
 logging.getLogger('sqlalchemy.engine').setLevel(logging.WARNING)
 
-
-
 #Create Book
 #Adds a new book.
 def create_book(data):
@@ -75,7 +73,6 @@ def get_all_books(limit=10, offset=0, search=None):
             books.c.author.ilike(f"%{search}%")
                     )
                 )
-
         #Pagination
         query = query.limit(limit).offset(offset)
         result = conn.execute(query)
@@ -89,12 +86,7 @@ def get_all_books(limit=10, offset=0, search=None):
         conn.close()
 
 
-
-
-
-
 #Update Book
-#Updates book fields dynamically.
 def update_book(book_id, data):
     conn = get_connection()
     try:
@@ -119,7 +111,6 @@ def update_book(book_id, data):
 
 
 #Delete Book
-#Deletes book.
 def delete_book(book_id):
     conn = get_connection()
     try:

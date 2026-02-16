@@ -25,8 +25,6 @@ app.register_blueprint(member_bp, url_prefix="/members")
 def handle_value_error(e):
     return jsonify({"error": str(e)}), 400
 
-#Global error handler that Catch ANY unexpected error,
-#e.g: Database connection crash,Bug in code,Missing fields, .. the return code is 500 means Internal Server Error
 
 @app.errorhandler(ValidationError)
 def handle_pydantic_error(e):
@@ -48,7 +46,8 @@ def handle_exists(e):
 def handle_borrow_error(e):
     return jsonify({"error": str(e)}), 400
 
-
+#Global error handler that Catch ANY unexpected error,
+#e.g: Database connection crash,Bug in code,Missing fields, .. the return code is 500 means Internal Server Error
 @app.errorhandler(Exception)
 def handle_general_error(e):
     return jsonify( {"error": "Internal server error"}), 500
