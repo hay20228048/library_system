@@ -7,15 +7,6 @@
     # Provide Base metadata
 
 
- 
-#I will Use because of SQLAlchemy Core:
-
-#Table
-#engine.connect()
-#insert(), select(), update(), delete()
-#metadata
-
-
 from sqlalchemy import create_engine, MetaData 
 from config import Config
 

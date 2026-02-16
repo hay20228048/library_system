@@ -4,7 +4,6 @@
     #Book availability checks - Book must exist before update/delete
     #Business validation - Member must exist
 
-
 #Borrowing Rules
     #Book must exist
     #Book cannot already be borrowed
