@@ -3,7 +3,7 @@ from app.infrastructure.repositories.member_repository import *
 # Create member
 member_id = create_member({
     "name": "Haya",
-    "email": "haya@gmail.com"
+    "email": "haya@gmaill.com"
 })
 
 print("Created Member:", member_id)

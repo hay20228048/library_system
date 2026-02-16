@@ -8,7 +8,7 @@ print("Added Book:", book)
 
 # Borrow book with non-existent member
 try:
-    BookService.borrow_book(book["book_id"], "fake-member-id")
+    BookService.borrow_book(book["book_id"], "75bd9bc5-a006-4af2-bb85-f04058544468")
 except ValueError as e:
     print("Borrow with invalid member:", e)
 
