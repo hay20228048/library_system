@@ -1,25 +1,25 @@
-#This file connects Flask with PostgreSQL.
+# This file connects Flask with PostgreSQL.
 
-#Main responsibilities:
-    # Create SQLAlchemy engine
-    # Load environment variables
-    # Provide Base metadata
+# Main responsibilities:
+# Create SQLAlchemy engine
+# Load environment variables
+# Provide Base metadata
 
 
 from sqlalchemy import MetaData, create_engine
 
-from library_management.settings import Config
+from settings import Config
 
 # Create Engine
 # engine is used to Handles connection to PostgreSQL.
-engine = create_engine(Config.DATABASE_URL, echo=True) #
+engine = create_engine(Config.DATABASE_URL, echo=True)  #
 # Metadata object (used to store tables)
-#metadata: SQLAlchemy Core uses this to register tables before creating them.
+# metadata: SQLAlchemy Core uses this to register tables before creating them.
 
 metadata = MetaData()
 
 
 # Helper function to get connection
-#I manually open and close DB connections.
+# I manually open and close DB connections.
 def get_connection():
     return engine.connect()

@@ -32,19 +32,22 @@ python -m venv venv
 source venv/bin/activate
 
 #Install Dependencies
-pip install -r requirements.txt
+poetry install
 python3 main.py
 ```
 
-#Server runs at:  http://127.0.0.1:5000
+#Server runs at: http://127.0.0.1:5000
 
 ## Run Tests
+
 ```bash
 pytest
 ```
 
 ## Main Endpoints
+
 ### Books
+
 ```
 POST   /books/
 GET    /books/
