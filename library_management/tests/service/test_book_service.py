@@ -1,6 +1,5 @@
-from app.domain.services.member_service import MemberService
 from app.domain.services.book_service import BookService
-
+from app.domain.services.member_service import MemberService
 
 # Add book
 book = BookService.add_book({"title": "Python", "author": "Haya"})

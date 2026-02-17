@@ -9,15 +9,16 @@
 #return_book()
 #-------------------------#
 
-from sqlalchemy import insert,select, delete, update, or_
-from sqlalchemy.exc import SQLAlchemyError
-from app.domain.models.book import books
-from app.infrastructure.db import get_connection
-from app.helper import help_function
-from datetime import datetime
-
 #disable SQLAlchemy INFO logs for cleaner output
 import logging
+from datetime import datetime
+
+from app.domain.models.book import books
+from app.helper import help_function
+from app.infrastructure.db import get_connection
+from sqlalchemy import delete, insert, or_, select, update
+from sqlalchemy.exc import SQLAlchemyError
+
 logging.getLogger('sqlalchemy.engine').setLevel(logging.WARNING)
 
 #Create Book
@@ -31,7 +32,7 @@ def create_book(data):
 
         return result.inserted_primary_key[0] # return book_id
     
-    except SQLAlchemyError as e:
+    except SQLAlchemyError:
         conn.rollback()
         raise  # Propagate exception to service layer
 
@@ -49,7 +50,7 @@ def get_book_by_id(book_id):
 
         return help_function.row_to_dict(result) #Returning Dictionary OR None
     
-    except SQLAlchemyError as e:
+    except SQLAlchemyError:
         conn.rollback()
         raise  # Propagate exception to service layer
 
@@ -78,7 +79,7 @@ def get_all_books(limit=10, offset=0, search=None):
         result = conn.execute(query)
         return [help_function.row_to_dict(row) for row in result] #Returning List of dictionaries
 
-    except SQLAlchemyError as e:
+    except SQLAlchemyError:
         conn.rollback()
         raise  # Propagate exception to service layer
    
@@ -100,7 +101,7 @@ def update_book(book_id, data):
         conn.commit()
         return help_function.row_to_dict(result) #Returning Updated book object
      
-    except SQLAlchemyError as e:
+    except SQLAlchemyError:
         conn.rollback()
         raise  # Propagate exception to service layer
 
@@ -119,7 +120,7 @@ def delete_book(book_id):
         conn.commit()
         return result.rowcount > 0 #Returning True or False
      
-    except SQLAlchemyError as e:
+    except SQLAlchemyError:
         conn.rollback()
         raise  # Propagate exception to service layer
 
@@ -147,7 +148,7 @@ def borrow_book(book_id, member_id):
         conn.commit()
         return help_function.row_to_dict(result)
     
-    except SQLAlchemyError as e:
+    except SQLAlchemyError:
         conn.rollback()
         raise  # Propagate exception to service layer
 
@@ -176,7 +177,7 @@ def return_book(book_id):
 
         return help_function.row_to_dict(result)
     
-    except SQLAlchemyError as e:
+    except SQLAlchemyError:
         conn.rollback()
         raise  # Propagate exception to service layer
 

@@ -3,6 +3,7 @@
 
 import uuid
 
+
 #To avoid duplicates each time
 def generate_email():
     return f"{uuid.uuid4()}@test.com"

@@ -15,18 +15,15 @@
     #Book must be currently borrowed
     #Resets borrowed_by + borrowed_date
 
-from app.infrastructure.repositories.book_repository import (
-    create_book,
-    get_book_by_id,
-    update_book,
-    delete_book,
-    borrow_book,
-    get_all_books,
-    return_book
-)
+from app.helper.exceptions import BorrowError, NotFoundError
+from app.infrastructure.repositories.book_repository import (borrow_book,
+                                                             create_book,
+                                                             delete_book,
+                                                             get_all_books,
+                                                             get_book_by_id,
+                                                             return_book,
+                                                             update_book)
 from app.infrastructure.repositories.member_repository import get_member_by_id
-from app.helper.exceptions import AlreadyExistsError, NotFoundError,BorrowError,ValidationError
-
 
 
 class BookService:

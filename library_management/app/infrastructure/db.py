@@ -6,9 +6,9 @@
     # Provide Base metadata
 
 
-from sqlalchemy import create_engine, MetaData 
-from library_management.settings import Config
+from sqlalchemy import MetaData, create_engine
 
+from library_management.settings import Config
 
 # Create Engine
 # engine is used to Handles connection to PostgreSQL.

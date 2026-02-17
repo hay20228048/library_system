@@ -4,15 +4,10 @@
     #Business validation
 
 
+from app.helper.exceptions import AlreadyExistsError, NotFoundError
 from app.infrastructure.repositories.member_repository import (
-    create_member,
-    get_member_by_id,
-    get_member_by_email,
-    update_member,
-    get_all_members,
-    delete_member
-)
-from app.helper.exceptions import AlreadyExistsError, NotFoundError,ValidationError
+    create_member, delete_member, get_all_members, get_member_by_email,
+    get_member_by_id, update_member)
 
 
 class MemberService:

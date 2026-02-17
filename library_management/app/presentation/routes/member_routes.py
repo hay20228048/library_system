@@ -8,14 +8,12 @@
 
 
 
-from flask import Blueprint, request, jsonify
 from app.domain.services.member_service import MemberService
-
+from flask import Blueprint, jsonify, request
 from pydantic import ValidationError
-from library_management.app.validators.member_model import MemberCreate,MemberUpdate
 
-
- 
+from library_management.app.validators.member_model import (MemberCreate,
+                                                            MemberUpdate)
 
 #Creates route group named member_bp to be registerd inside main.py.
 member_bp = Blueprint("member_bp", __name__)

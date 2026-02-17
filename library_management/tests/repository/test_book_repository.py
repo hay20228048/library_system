@@ -1,11 +1,16 @@
-#test_book_repository.py
-from app.infrastructure.repositories.book_repository import *
+# test_book_repository.py
+from app.infrastructure.repositories.book_repository import (borrow_book,
+                                                             create_book,
+                                                             get_book_by_id,
+                                                             return_book)
 
 # Create book
-book_id = create_book({
-    "title": "Essential SQLAlchemy: Mapping Python to Databases",
-    "author": "Jason Myers, Rick Copeland"
-})
+book_id = create_book(
+    {
+        "title": "Essential SQLAlchemy: Mapping Python to Databases",
+        "author": "Jason Myers, Rick Copeland",
+    }
+)
 
 print("Created Book ID:", book_id)
 
