@@ -7,69 +7,47 @@
 # DELETE	/members/{id}
 
 
+from fastapi import APIRouter, Body, Query
+from typing import Optional
+from pydantic import ValidationError, EmailStr
 from app.domain.services.member_service import MemberService
-from flask import Blueprint, jsonify, request
-from pydantic import ValidationError
-
 from app.presentation.models.member_model import MemberCreate, MemberUpdate
 
 # Creates route group named member_bp to be registerd inside main.py.
-member_bp = Blueprint("member_bp", __name__)
+router = APIRouter()
 
 
 # Create Member
-@member_bp.route("/", methods=["POST"])
-def add_member():
-    try:
-        data = MemberCreate(**request.json)
-
-        member = MemberService.add_member(name=data.name, email=data.email)
-        return jsonify(
-            member
-        ), 201  # Convert result to JSON, HTTP 201 means Created successfully
-
-    except ValidationError as err:
-        return {"error": err.messages}, 400
+@router.post("/", response_model=dict, status_code=201)
+def add_member(member: MemberCreate = Body(...)):
+    return MemberService.add_member(member)
 
 
 # Get All Members
-@member_bp.route("/", methods=["GET"])
-def get_members():
-
-    limit = int(request.args.get("limit", 10))
-    offset = int(request.args.get("offset", 0))
-    search = request.args.get("search")
-
-    members = MemberService.get_all_members(limit, offset, search)
-
-    return jsonify(members), 200
+@router.get("/", response_model=list)
+def get_members(
+    limit: int = Query(10, ge=0),
+    offset: int = Query(0, ge=0),
+    search: Optional[str] = None,
+):
+    return MemberService.get_all_members(limit=limit, offset=offset, search=search)
 
 
+# FastAPI automatically validates path parameters using type hints.
 # Get Member by ID
-@member_bp.route("/<member_id>", methods=["GET"])
-def get_member(member_id):
-    member = MemberService.get_member(member_id)
-    return jsonify(member), 200
+@router.get("/{member_id}", response_model=dict)
+def get_member(member_id: str):
+    return MemberService.get_member(member_id)
 
 
 # Update Member
-@member_bp.route("/<member_id>", methods=["PUT"])
-def update_member(member_id):
-    try:
-        data = MemberUpdate(**request.json)
-
-        updated_member = MemberService.update_member(
-            member_id, **data.dict(exclude_unset=True)
-        )
-
-        return jsonify(updated_member), 200
-
-    except ValidationError as err:
-        return {"error": err.messages}, 400
+@router.put("/{member_id}", response_model=dict)
+def update_member(member_id: str, member: MemberUpdate = Body(...)):
+    return MemberService.update_member(member_id, member)
 
 
 # Delete Member
-@member_bp.route("/<member_id>", methods=["DELETE"])
-def delete_member(member_id):
+@router.delete("/{member_id}")
+def delete_member(member_id: str):
     MemberService.delete_member(member_id)
-    return jsonify({"message": "Member deleted successfully"}), 200
+    return {"message": "Member deleted successfully"}

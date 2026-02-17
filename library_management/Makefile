@@ -5,7 +5,7 @@ PIP=$(VENV)/bin/pip
 
 # Run Flask App
 run:
-	poetry run python main.py
+	poetry run uvicorn main:app --reload
 
 # Run Tests
 test:

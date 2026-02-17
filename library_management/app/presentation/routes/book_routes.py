@@ -8,72 +8,66 @@
 
 
 from app.domain.services.book_service import BookService
-from flask import Blueprint, jsonify, request
+from fastapi import APIRouter, Query, Body
+from typing import Optional
 from pydantic import ValidationError
 from app.presentation.models.book_model import BookCreate, BookUpdate
 
-book_bp = Blueprint("book_bp", __name__)
+router = APIRouter()
 
 
 # Create Book
-@book_bp.route("/", methods=["POST"])
-def add_book():
+@router.post("/", response_model=dict, status_code=201)
+def add_book(book: BookCreate = Body(...)):
     try:
-        data = BookCreate(**request.json)
-        book = BookService.add_book(title=data.title, author=data.author)
-        return jsonify(book), 201
+        book = BookService.add_book(book)
+        return book
 
     except ValidationError as err:
         return {"error": err.messages}, 400
 
 
 # Get All Books
-@book_bp.route("/", methods=["GET"])
-def get_books():
-
-    limit = int(request.args.get("limit", 10))
-    offset = int(request.args.get("offset", 0))
-    search = request.args.get("search")
-    books = BookService.get_all_books(limit, offset, search)
-    return jsonify(books), 200
+@router.get("/")
+def get_books(
+    # ge=0 ensures limit and offset are ≥0.
+    limit: int = Query(10, ge=0),
+    offset: int = Query(0, ge=0),
+    search: Optional[str] = None,
+):
+    books = BookService.get_all_books(limit=limit, offset=offset, search=search)
+    return books
 
 
 # Get Book by ID
-@book_bp.route("/<int:book_id>", methods=["GET"])
-def get_book(book_id):
+@router.get("/{book_id}")
+def get_book(book_id: int):
     book = BookService.get_book(book_id)
-    return jsonify(book), 200
+    return book
 
 
-# Update Book
-@book_bp.route("/<int:book_id>", methods=["PUT"])
-def update_book(book_id):
-    try:
-        data = BookUpdate(**request.json)
-
-        updated = BookService.update_book(book_id, **data.dict(exclude_unset=True))
-        return jsonify(updated), 200
-
-    except ValidationError as err:
-        return {"error": err.messages}, 400
+# exclude_unset=True ensures only provided fields are updated.
+@router.put("/{book_id}")
+def update_book(book_id: int, book: BookUpdate = Body(...)):
+    updated = BookService.update_book(book_id, book)
+    return updated
 
 
-# Delete Book
-@book_bp.route("/<int:book_id>", methods=["DELETE"])
-def delete_book(book_id):
+@router.delete("/{book_id}")
+def delete_book(book_id: int):
     BookService.delete_book(book_id)
-    return jsonify({"message": "Book deleted successfully"}), 200
+    return {"message": "Book deleted successfully"}
 
 
 # Borrow Book
-@book_bp.route("/borrow/<int:book_id>/<member_id>", methods=["POST"])
-def borrow_book(book_id, member_id):
+@router.post("/borrow/{book_id}/{member_id}")
+def borrow_book(book_id: int, member_id: str):
     book = BookService.borrow_book(book_id, member_id)
-    return jsonify(book), 200
+    return book
 
 
 # Return Book
-@book_bp.route("/return/<int:book_id>", methods=["POST"])
-def return_book(book_id):
+@router.post("/return/{book_id}")
+def return_book(book_id: int):
     book = BookService.return_book(book_id)
-    return jsonify(book), 200
+    return book

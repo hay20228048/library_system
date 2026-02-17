@@ -1,57 +1,54 @@
-from app.helper.exceptions import (AlreadyExistsError, BorrowError,
-                                   NotFoundError)
-from app.presentation.routes.book_routes import book_bp
-from app.presentation.routes.member_routes import member_bp
-from flask import Flask, jsonify
+from app.helper.exceptions import NotFoundError, AlreadyExistsError, BorrowError
+
+from app.presentation.routes.book_routes import router as book_router
+from app.presentation.routes.member_routes import router as member_router
+
+from fastapi import FastAPI, Request, HTTPException
+from fastapi.exceptions import RequestValidationError
 from pydantic import ValidationError
-
-app = Flask(__name__)
-
-#Register Blueprints
-#connects route files to the main app.
-app.register_blueprint(book_bp, url_prefix="/books")
-
-#rl_prefix="/books": Means every route in book_routes.py will start with:
-app.register_blueprint(member_bp, url_prefix="/members")
+from fastapi.responses import JSONResponse
 
 
+app = FastAPI()
 
 
-#Global error handler for ValueError from Service Layer 
-#It works whenever Service Layer raises ValueError message
-#Flask here is automatically returns the message I have defined in the Service Layer
-@app.errorhandler(ValueError)
-def handle_value_error(e):
-    return jsonify({"error": str(e)}), 400
+# rl_prefix="/books": Means every route in book_routes.py will start with:
+app.include_router(book_router, prefix="/books")
+app.include_router(member_router, prefix="/members")
 
 
-@app.errorhandler(ValidationError)
-def handle_pydantic_error(e):
-    return {"error": e.errors()}, 400
+# Global error handler for ValueError from Service Layer
+# It works whenever Service Layer raises ValueError message
 
 
-
-@app.errorhandler(NotFoundError)
-def handle_not_found(e):
-    return jsonify({"error": str(e)}), 404
-
-
-@app.errorhandler(AlreadyExistsError)
-def handle_exists(e):
-    return jsonify({"error": str(e)}), 400
+@app.exception_handler(ValueError)
+async def handle_value_error(request: Request, exc: ValueError):
+    return JSONResponse(status_code=400, content={"error": str(exc)})
 
 
-@app.errorhandler(BorrowError)
-def handle_borrow_error(e):
-    return jsonify({"error": str(e)}), 400
-
-#Global error handler that Catch ANY unexpected error,
-#e.g: Database connection crash,Bug in code,Missing fields, .. the return code is 500 means Internal Server Error
-@app.errorhandler(Exception)
-def handle_general_error(e):
-    return jsonify( {"error": "Internal server error"}), 500
+@app.exception_handler(NotFoundError)
+async def handle_not_found(request: Request, exc: NotFoundError):
+    return JSONResponse(status_code=404, content={"error": str(exc)})
 
 
+@app.exception_handler(AlreadyExistsError)
+async def handle_exists(request: Request, exc: AlreadyExistsError):
+    return JSONResponse(status_code=400, content={"error": str(exc)})
 
-if __name__ == "__main__":
-    app.run(debug=True)
+
+@app.exception_handler(BorrowError)
+async def handle_borrow_error(request: Request, exc: BorrowError):
+    return JSONResponse(status_code=400, content={"error": str(exc)})
+
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    # FastAPI uses 422 Unprocessable Entity by default for validation errors.
+    return JSONResponse(status_code=422, content={"errors": exc.errors()})
+
+
+# Global error handler that Catch ANY unexpected error,
+# e.g: Database connection crash,Bug in code,Missing fields, .. the return code is 500 means Internal Server Error
+@app.exception_handler(Exception)
+async def handle_general_error(request: Request, exc: Exception):
+    return JSONResponse(status_code=500, content={"error": "Internal server error"})

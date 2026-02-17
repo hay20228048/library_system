@@ -15,19 +15,22 @@ import logging
 from app.domain.models.member import members
 from app.helper import help_function
 from app.infrastructure.db import get_connection
+
 # disable SQLAlchemy INFO logs for cleaner output
 from sqlalchemy import delete, insert, or_, select, update
 from sqlalchemy.exc import SQLAlchemyError
+
+from app.presentation.models.member_model import MemberCreate, MemberUpdate
 
 logging.getLogger("sqlalchemy.engine").setLevel(logging.WARNING)
 
 
 # Create Member
 # Adds a new member
-def create_member(data):
+def create_member(data: MemberCreate):
     conn = get_connection()
     try:
-        stmt = insert(members).values(**data)
+        stmt = insert(members).values(**dict(data.model_dump(exclude_unset=True)))
         result = conn.execute(stmt)
         conn.commit()
         return result.inserted_primary_key[0]  # Returning member_id (UUID)
@@ -105,13 +108,13 @@ def get_all_members(limit=10, offset=0, search=None):
 
 
 # Update Member
-def update_member(member_id, data):
+def update_member(member_id, data: MemberUpdate):
     conn = get_connection()
     try:
         stmt = (
             update(members)
             .where(members.c.member_id == member_id)
-            .values(**data)
+            .values(**dict(data.model_dump(exclude_unset=True)))
             .returning(members)
         )
         result = conn.execute(stmt).fetchone()
