@@ -7,7 +7,7 @@
 
 
 from sqlalchemy import create_engine, MetaData 
-from config import Config
+from library_management.settings import Config
 
 
 # Create Engine

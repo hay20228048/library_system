@@ -12,7 +12,7 @@ from flask import Blueprint, request, jsonify
 from app.domain.services.member_service import MemberService
 
 from pydantic import ValidationError
-from app.validators.member_validator import MemberCreate,MemberUpdate
+from library_management.app.validators.member_model import MemberCreate,MemberUpdate
 
 
  

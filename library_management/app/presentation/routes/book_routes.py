@@ -10,7 +10,7 @@
 
 from flask import Blueprint, request, jsonify
 from app.domain.services.book_service import BookService
-from app.validators.book_validator import BookCreate,BookUpdate
+from library_management.app.validators.book_model import BookCreate,BookUpdate
 from pydantic import ValidationError
 
 
