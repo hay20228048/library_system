@@ -6,8 +6,9 @@
 
 import uuid
 
-from app.infrastructure.db import metadata
 from sqlalchemy import Column, String, Table
+
+from app.infrastructure.db import metadata
 
 members = Table(
     "members",

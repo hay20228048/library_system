@@ -7,9 +7,11 @@
 # DELETE	/members/{id}
 
 
-from fastapi import APIRouter, Body, Query
 from typing import Optional
-from pydantic import ValidationError, EmailStr
+
+from fastapi import APIRouter, Body, Query
+from pydantic import EmailStr, ValidationError
+
 from app.domain.services.member_service import MemberService
 from app.presentation.models.member_model import MemberCreate, MemberUpdate
 

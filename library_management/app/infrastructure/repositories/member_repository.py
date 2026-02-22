@@ -12,14 +12,13 @@
 
 import logging
 
-from app.domain.models.member import members
-from app.helper import help_function
-from app.infrastructure.db import get_connection
-
 # disable SQLAlchemy INFO logs for cleaner output
 from sqlalchemy import delete, insert, or_, select, update
 from sqlalchemy.exc import SQLAlchemyError
 
+from app.domain.models.member import members
+from app.helper import help_function
+from app.infrastructure.db import get_connection
 from app.presentation.models.member_model import MemberCreate, MemberUpdate
 
 logging.getLogger("sqlalchemy.engine").setLevel(logging.WARNING)

@@ -7,10 +7,12 @@
 # POST	/return/{book_id}
 
 
-from app.domain.services.book_service import BookService
-from fastapi import APIRouter, Query, Body
 from typing import Optional
+
+from fastapi import APIRouter, Body, Query
 from pydantic import ValidationError
+
+from app.domain.services.book_service import BookService
 from app.presentation.models.book_model import BookCreate, BookUpdate
 
 router = APIRouter()

@@ -7,9 +7,10 @@
     #borrowed_by (FK → members)
 
 
-from app.infrastructure.db import metadata
 from sqlalchemy import (Boolean, Column, DateTime, ForeignKey, Integer, String,
                         Table)
+
+from app.infrastructure.db import metadata
 
 books = Table(
     "books",
