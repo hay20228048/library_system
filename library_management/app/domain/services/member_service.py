@@ -6,8 +6,13 @@
 
 from app.helper.exceptions import AlreadyExistsError, NotFoundError
 from app.infrastructure.repositories.member_repository import (
-    create_member, delete_member, get_all_members, get_member_by_email,
-    get_member_by_id, update_member)
+    create_member,
+    delete_member,
+    get_all_members,
+    get_member_by_email,
+    get_member_by_id,
+    update_member,
+)
 from app.presentation.models.member_model import MemberCreate, MemberUpdate
 
 
@@ -15,7 +20,7 @@ class MemberService:
     @staticmethod
     def add_member(data: MemberCreate):
         # Validates unique email before creating (Check if email already exists)
-        existing = get_member_by_email(data["email"])
+        existing = get_member_by_email(data.email)
         if existing:
             raise AlreadyExistsError(f"Email '{data['email']}' is already exists!")
 
