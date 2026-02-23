@@ -22,7 +22,7 @@ class MemberService:
         # Validates unique email before creating (Check if email already exists)
         existing = get_member_by_email(data.email)
         if existing:
-            raise AlreadyExistsError(f"Email '{data['email']}' is already exists!")
+            raise AlreadyExistsError(f"Email '{data.email}' is already exists!")
 
         # If the email is Not exist: simply create a member  and returns the full member dictionary.
         member_id = create_member(data)
