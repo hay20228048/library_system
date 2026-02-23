@@ -1,25 +1,20 @@
+# Dockerfile
 FROM python:3.13-slim
 
+# Set working directory
 WORKDIR /app
 
-# install system deps
-RUN apt-get update && apt-get install -y gcc
+# Install system dependencies
+RUN apt-get update && apt-get install -y gcc libpq-dev
 
-# copy dependency files first (cache optimization)
+# Install Python dependencies (Poetry example)
 COPY pyproject.toml poetry.lock* ./
-
-# install poetry
-RUN pip install poetry
-
-# install dependencies
-RUN poetry config virtualenvs.create false \
+RUN pip install poetry \
+    && poetry config virtualenvs.create false \
     && poetry install --no-interaction --no-ansi --no-root
 
-
-
-
-# copy project
+# Copy application code
 COPY . .
 
-EXPOSE 8000
+# Default command (overridden by docker-compose)
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

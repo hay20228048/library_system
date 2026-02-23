@@ -12,7 +12,12 @@ from settings import Config
 
 # Create Engine
 # engine is used to Handles connection to PostgreSQL.
-engine = create_engine(Config.DATABASE_URL, echo=True)  #
+engine = create_engine(
+    "postgresql://library_user:123456@library_db:5432/library_db",
+    pool_pre_ping=True,  # checks connection before using it
+    connect_args={},  # optional for Postgres
+)
+
 # Metadata object (used to store tables)
 # metadata: SQLAlchemy Core uses this to register tables before creating them.
 
