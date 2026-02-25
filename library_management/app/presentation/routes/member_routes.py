@@ -10,7 +10,6 @@
 from typing import Optional
 
 from fastapi import APIRouter, Body, Query
-from pydantic import EmailStr, ValidationError
 
 from app.domain.services.member_service import MemberService
 from app.presentation.models.member_model import MemberCreate, MemberUpdate

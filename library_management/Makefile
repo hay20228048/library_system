@@ -5,23 +5,11 @@ PIP=$(VENV)/bin/pip
 
 # Run Flask App
 run:
-	poetry run uvicorn main:app --reload
+	docker compose up
 
 # Run Tests
 test:
 	poetry run pytest
-
-# Install Dependencies
-install:
-	$(PIP) install -r requirements.txt
-
-# Create Virtual Environment
-venv:
-	python3 -m venv $(VENV)
-
-# Activate Environment (Linux/Mac reminder)
-activate:
-	@echo "Run: source venv/bin/activate"
 
 lint:
 	poetry run ruff check .

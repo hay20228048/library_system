@@ -1,7 +1,6 @@
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
-from pydantic import ValidationError
 
 from app.helper.exceptions import AlreadyExistsError, BorrowError, NotFoundError
 from app.presentation.routes.book_routes import router as book_router

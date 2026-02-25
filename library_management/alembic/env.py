@@ -4,6 +4,9 @@ from sqlalchemy import engine_from_config, pool
 from alembic import context
 import sys
 import os
+from dotenv import load_dotenv
+from alembic import context
+
 
 # Make sure your app folder is in the Python path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
@@ -11,20 +14,16 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 # Import metadata
 from app.infrastructure.db import metadata
 
-# Import all table modules so that metadata gets populated
-from app.domain.models import (
-    book,
-    member,
-)
 
 config = context.config
 fileConfig(config.config_file_name)
-
+database_url = os.getenv("DATABASE_URL")
 target_metadata = metadata
+config.set_main_option("sqlalchemy.url", database_url)
 
 
 def run_migrations_offline():
-    url = "postgresql://library_user:123456@db:5432/library_db"
+    url = config.get_main_option("sqlalchemy.url")
     context.configure(
         url=url,
         target_metadata=target_metadata,

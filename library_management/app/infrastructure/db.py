@@ -8,8 +8,6 @@
 
 from sqlalchemy import MetaData, create_engine
 
-from settings import Config
-
 # Create Engine
 # engine is used to Handles connection to PostgreSQL.
 engine = create_engine(
