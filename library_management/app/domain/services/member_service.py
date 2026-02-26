@@ -3,7 +3,6 @@
 # Member existence checks - Member must exist before update/delete
 # Business validation
 
-
 from app.helper.exceptions import AlreadyExistsError, NotFoundError
 from app.infrastructure.repositories.member_repository import (
     create_member,
@@ -14,7 +13,7 @@ from app.infrastructure.repositories.member_repository import (
     update_member,
 )
 from app.presentation.models.member_model import MemberCreate, MemberUpdate
-
+from app.domain.events.member_events import member_created_event, member_deleted_event, member_updated_event
 
 class MemberService:
     @staticmethod
@@ -26,7 +25,9 @@ class MemberService:
 
         # If the email is Not exist: simply create a member  and returns the full member dictionary.
         member_id = create_member(data)
-        return get_member_by_id(member_id)
+        membernew=get_member_by_id(member_id)
+        member_created_event(membernew)
+        return membernew
 
     @staticmethod
     # Returns member if member_id exist or raises error if not.
@@ -58,6 +59,7 @@ class MemberService:
                 )
 
         updated = update_member(member_id, data)
+        member_updated_event(updated)
         if not updated:
             raise NotFoundError(f"Member with ID {member_id} does not exist.")
         return updated
@@ -65,6 +67,7 @@ class MemberService:
     @staticmethod
     def delete_member(member_id):
         deleted = delete_member(member_id)
+        member_deleted_event(member_id)
         # if the deleted return value is False this means the member id does NOT exist in the table (Raises error if member not found)
         if not deleted:
             raise NotFoundError(f"Member with ID {member_id} does not exist.")

@@ -26,12 +26,17 @@ from app.infrastructure.repositories.book_repository import (borrow_book,
 from app.infrastructure.repositories.member_repository import get_member_by_id
 from app.presentation.models.book_model import BookCreate, BookUpdate
 
+from app.domain.events.book_events import book_created_event,book_deleted_event, book_updated_event, book_borrowed_event
+
 
 class BookService:
     @staticmethod
     def add_book(data: BookCreate):
         book_id = create_book(data)
-        return get_book_by_id(book_id)
+        
+        booknew=get_book_by_id(book_id)
+        book_created_event(booknew)
+        return booknew
 
     @staticmethod
     def get_book(book_id):
@@ -51,6 +56,7 @@ class BookService:
     @staticmethod
     def update_book(book_id, data: BookUpdate):
         updated = update_book(book_id, data)
+        book_updated_event(updated)
         if not updated:
             raise NotFoundError(f"Book with ID {book_id} does not exist.")
         return updated
@@ -58,6 +64,7 @@ class BookService:
     @staticmethod
     def delete_book(book_id):
         deleted = delete_book(book_id)
+        book_deleted_event(book_id)
         if not deleted:
             raise NotFoundError(f"Book with ID {book_id} does not exist.")
         return True
@@ -80,6 +87,8 @@ class BookService:
 
         # Borrow book
         updated_book = borrow_book(book_id, member_id)
+        book_borrowed_event(updated_book, member_id)
+
         return updated_book
 
     @staticmethod
