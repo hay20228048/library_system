@@ -1,0 +1,40 @@
+"use client";
+
+import { useState } from "react";
+
+export default function AddBookPage() {
+  const [title, setTitle] = useState("");
+  const [author, setAuthor] = useState("");
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+
+    const res = await fetch("http://api:8000/books/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ title, author }),
+    });
+
+    const data = await res.json();
+    console.log(data);
+    alert("Book added!");
+  }
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input
+        placeholder="Title"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+      />
+      <input
+        placeholder="Author"
+        value={author}
+        onChange={(e) => setAuthor(e.target.value)}
+      />
+      <button type="submit">Add Book</button>
+    </form>
+  );
+}
