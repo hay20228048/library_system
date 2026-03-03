@@ -1,6 +1,8 @@
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
+
 
 from app.helper.exceptions import AlreadyExistsError, BorrowError, NotFoundError
 from app.presentation.routes.book_routes import router as book_router
@@ -49,3 +51,17 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 @app.exception_handler(Exception)
 async def handle_general_error(request: Request, exc: Exception):
     return JSONResponse(status_code=500, content={"error": "Internal server error"})
+
+
+#Here we  Add CORS, 
+# As Next.js runs on port 3000
+# and FastAPI runs on port 8000
+# Your FastAPI runs on:
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)

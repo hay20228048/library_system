@@ -72,6 +72,16 @@ services:
     networks:
       - backend
 
+  frontend:
+    build: ./frontend
+    container_name: library_frontend
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+    networks:
+      - backend
 volumes:
   postgres_data:
 
